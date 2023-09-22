@@ -12,7 +12,8 @@ namespace api3.Repository
         }
         public bool CreateInventory(Inventory inventory)
         {
-            throw new NotImplementedException();
+            _context.Add(inventory);
+            return save();
         }
 
         public ICollection<Inventory> GetInventory()
@@ -40,5 +41,35 @@ namespace api3.Repository
             return save();
 
         }
+        public bool DeleteInventory(Inventory Inventory)
+        {
+            _context.Remove(Inventory);
+            return save();
+        }
+
+        public Inventory GetInventory(int id)
+        {
+            return _context.Inventories.Where(e => e.IdInventory == id).FirstOrDefault();
+        }
+
+        public int GetNextInventoryId()
+        {
+            var lastInventory = _context.Inventories
+                .OrderByDescending(e => e.IdInventory)
+                .FirstOrDefault();
+
+            if (lastInventory != null)
+            {
+                // Se encontró el último registro, devuelve el siguiente ID.
+                int id = Convert.ToInt32(lastInventory.IdInventory + 1);
+                return id;
+            }
+            else
+            {
+                // No se encontraron registros en la tabla, devuelve 1 como el primer ID.
+                return 1;
+            }
+        }
+
     }
 }

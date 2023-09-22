@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace api3.Models;
 
@@ -27,7 +28,13 @@ public partial class PgAdminContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Employee>(entity =>
+
+
+        var dateTimeToTimestampConverter = new ValueConverter<DateTime, DateTime>(
+            v => v, // Convertir DateTime a sí mismo
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc) // Convertir timestamp a DateTime
+            );
+                modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasKey(e => e.IdEmployee).HasName("PK__Employee__D9EE4F362C37AD8C");
 
@@ -41,6 +48,8 @@ public partial class PgAdminContext : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
+           
+
             entity.HasKey(e => e.IdInventory).HasName("PK__Inventor__2210F49E6563AFD3");
 
             entity.ToTable("Inventory");
@@ -48,7 +57,7 @@ public partial class PgAdminContext : DbContext
             entity.Property(e => e.IdInventory)
                 .ValueGeneratedNever()
                 .HasColumnName("ID_Inventory");
-            entity.Property(e => e.Date).HasColumnType("datetime");
+            entity.Property(e => e.Date).HasColumnType("timestamp with time zone").HasConversion(dateTimeToTimestampConverter); 
             entity.Property(e => e.Flavor).HasMaxLength(60);
             entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
             entity.Property(e => e.IdStore).HasColumnName("ID_Store");

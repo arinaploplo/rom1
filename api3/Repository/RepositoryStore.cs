@@ -12,7 +12,8 @@ namespace api3.Repository
         }
         public bool CreateStore(Store Store)
         {
-            throw new NotImplementedException();
+            _context.Add(Store);
+            return save();
         }
 
         public ICollection<Store> GetStore()
@@ -39,6 +40,34 @@ namespace api3.Repository
             _context.Update(Store);
             return save();
 
+        }
+        public bool DeleteStore(Store Store)
+        {
+            _context.Remove(Store);
+            return save();
+        }
+
+        public Store GetStore(int id)
+        {
+            return _context.Stores.Where(e => e.IdStore == id).FirstOrDefault();
+        }
+        public int GetNextStoreId()
+        {
+            var lastStore = _context.Inventories
+                .OrderByDescending(e => e.IdStore)
+                .FirstOrDefault();
+
+            if (lastStore != null)
+            {
+                // Se encontró el último registro, devuelve el siguiente ID.
+                int id = Convert.ToInt32(lastStore.IdStore + 1);
+                return id;
+            }
+            else
+            {
+                // No se encontraron registros en la tabla, devuelve 1 como el primer ID.
+                return 1;
+            }
         }
     }
 }

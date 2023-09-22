@@ -18,6 +18,10 @@ namespace api3.Helper
             CreateMap<InventoryDto, Inventory>();
             CreateMap<StoreDto, Store>();
 
+            //put (del dto a la tabla)
+            CreateMap<EmployeeUpdateDto, Employee>();
+            CreateMap<StoreUpdateDto, Store>();
+            CreateMap<InventoryUpdateDto, Inventory>();
 
 
 

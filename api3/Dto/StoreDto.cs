@@ -9,5 +9,11 @@ public partial class StoreDto
 
     public string? Name { get; set; }
 
-    public virtual ICollection<InventoryDto> Inventories { get; set; } = new List<InventoryDto>();
+    //public virtual ICollection<InventoryDto> Inventories { get; set; } = new List<InventoryDto>();
 }
+public partial class StoreUpdateDto
+{
+    public string Name { get; set; }
+
+}
+
