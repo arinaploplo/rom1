@@ -103,15 +103,15 @@ namespace api3.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            int storeId = _RepositoryStore.GetStoreIdByName(updatedInventory.store);
-            if (!_RepositoryStore.StoreExist(storeId)) { return NotFound("No se encontro la tabla del IdStore que proporcionaste"); }
+            int employeeId = _RepositoryEmployee.GetEmployeeIdByName(updatedInventory.ListedBy);
+            //if (!_RepositoryStore.StoreExist(storeId)) { return NotFound("No se encontro la tabla del IdStore que proporcionaste"); }
 
-            //  if (!_RepositoryEmployee.EmployeeExist(updatedInventory.IdEmployee)) { return NotFound("No se encontro la tabla del IdEmployee que proporcionaste"); }
+             if (!_RepositoryEmployee.EmployeeExist(employeeId)) { return NotFound("No se encontro la tabla del IdEmployee que proporcionaste"); }
             var filterUpdate = _RepositoryInventory.GetInventory(InventoryId); // Obtener los datos para que solo actualice lo que quiero
 
             var InventoryMap = _mapper.Map<Inventory>(filterUpdate);
             InventoryMap.Quantity = updatedInventory.Quantity; // Actualizar quantity
-            InventoryMap.IdStore = storeId; // Actualizar id de store
+            InventoryMap.IdEmployee = employeeId; // Actualizar id de store
 
             if (!_RepositoryInventory.UpdateInventory(InventoryId, InventoryMap))
             {
@@ -183,7 +183,7 @@ namespace api3.Controllers
                         InventoryDto InventoryDTO = new InventoryDto(); // Crear una nueva instancia
 
                         // Agregar el store
-                        int storeId = _RepositoryStore.GetStoreIdByName(record.Store);
+                        int storeId = _RepositoryStore.GetStoreIdByName(record.Store.Trim());
                         
                         if (storeId == -1) {
                             StoreDTO.IdStore = 0;
@@ -194,7 +194,7 @@ namespace api3.Controllers
                                 return StatusCode(666, "Store ya existe");
                             }
 
-                            StoreDTO.Name = record.Store;
+                            StoreDTO.Name = record.Store.Trim();
 
                             var Store = _mapper.Map<Store>(StoreDTO);
 
@@ -209,7 +209,7 @@ namespace api3.Controllers
                       
 
                         //Agregar el empleado
-                        int EmployeeId = _RepositoryEmployee.GetEmployeeIdByName(record.ListedBy);
+                        int EmployeeId = _RepositoryEmployee.GetEmployeeIdByName(record.ListedBy.Trim());
 
                         if (EmployeeId == -1)
                         {
@@ -221,7 +221,7 @@ namespace api3.Controllers
                                 return StatusCode(666, "Employee ya existe");
                             }
 
-                            EmployeeDTO.Name = record.ListedBy;
+                            EmployeeDTO.Name = record.ListedBy.Trim();
 
                             var Employee = _mapper.Map<Employee>(EmployeeDTO);
 

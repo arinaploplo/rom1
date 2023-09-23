@@ -30,10 +30,12 @@ public partial class InventoryDto
 
 public partial class InventoryUpdateDto
 {
-    [Name("Listed By")]
-    public string store { get; set; }
+    [JsonProperty("Listed By")]
+    public string ListedBy { get; set; }
 
-   // public int IdEmployee { get; set; }
+    public int Quantity { get; set; }
+
+    // public int IdEmployee { get; set; }
 
     //public DateTime? Date { get; set; } 
 
@@ -41,7 +43,7 @@ public partial class InventoryUpdateDto
 
     //public string? IsSeasonFlavor { get; set; }
 
-    public int Quantity { get; set; }
+
 
 }
 

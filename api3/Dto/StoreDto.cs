@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace api3.Dto;
@@ -13,6 +14,7 @@ public partial class StoreDto
 }
 public partial class StoreUpdateDto
 {
+    
     public string Name { get; set; }
 
 }
