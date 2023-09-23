@@ -103,8 +103,16 @@ namespace api3.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var InventoryMap = _mapper.Map<Inventory>(updatedInventory);
-            InventoryMap.IdInventory = InventoryId;
+            int storeId = _RepositoryStore.GetStoreIdByName(updatedInventory.store);
+            if (!_RepositoryStore.StoreExist(storeId)) { return NotFound("No se encontro la tabla del IdStore que proporcionaste"); }
+
+            //  if (!_RepositoryEmployee.EmployeeExist(updatedInventory.IdEmployee)) { return NotFound("No se encontro la tabla del IdEmployee que proporcionaste"); }
+            var filterUpdate = _RepositoryInventory.GetInventory(InventoryId); // Obtener los datos para que solo actualice lo que quiero
+
+            var InventoryMap = _mapper.Map<Inventory>(filterUpdate);
+            InventoryMap.Quantity = updatedInventory.Quantity; // Actualizar quantity
+            InventoryMap.IdStore = storeId; // Actualizar id de store
+
             if (!_RepositoryInventory.UpdateInventory(InventoryId, InventoryMap))
             {
                 ModelState.AddModelError("", "Something went wrong updating owner");
@@ -159,9 +167,13 @@ namespace api3.Controllers
                 }))
 
                 {
-                    var hola = streamReader;
-                    // Lee los registros del archivo CSV y mapea a InventoryCsvDto
-                    var records = csvReader.GetRecords<InventoryCsvDto>().ToList(); // lista de registros
+
+                    var records = csvReader.GetRecords<InventoryCsvDto>()
+                        .Where(record => !string.IsNullOrWhiteSpace(record.Store)) // Eliminar espacios en blanco
+                        .ToList(); // lista de registros
+
+
+
 
 
 
@@ -206,10 +218,11 @@ namespace api3.Controllers
                         InventoryDTO.IdInventory = _RepositoryInventory.GetNextInventoryId();
                         InventoryDTO.IdEmployee = EmployeeDTO.IdEmployee;
                         InventoryDTO.IdStore = StoreDTO.IdStore;
-                        InventoryDTO.Date = Convert.ToDateTime(record.Date);
+                        //InventoryDTO.Date = Convert.ToDateTime(record.Date);
+                        InventoryDTO.Date = DateTime.SpecifyKind(Convert.ToDateTime(record.Date), DateTimeKind.Utc); // Por el tema del timeswamp
                         InventoryDTO.Flavor = record.Flavor;
                         InventoryDTO.IsSeasonFlavor = record.IsSeasonFlavor;
-                        InventoryDTO.Quantity = record.Quantity;
+                        InventoryDTO.Quantity = Convert.ToInt32(record.Quantity);
 
 
                         var Inventory = _mapper.Map<Inventory>(InventoryDTO);
@@ -228,6 +241,12 @@ namespace api3.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Ocurrió un error al procesar el archivo CSV: " + ex.Message);
+
+                if (ex.InnerException != null)
+                {
+                    ModelState.AddModelError("InnerException", ex.InnerException.Message);
+                }
+
                 return BadRequest(ModelState);
             }
         }

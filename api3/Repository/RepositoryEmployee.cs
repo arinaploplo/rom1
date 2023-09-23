@@ -56,7 +56,7 @@ namespace api3.Repository
 
         public int GetNextEmployeeId()
         {
-            var lastEmployee = _context.Inventories
+            var lastEmployee = _context.Employees
                 .OrderByDescending(e => e.IdEmployee)
                 .FirstOrDefault();
 

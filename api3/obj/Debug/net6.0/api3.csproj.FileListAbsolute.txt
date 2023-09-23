@@ -87,3 +87,4 @@ C:\Users\rayfe\OneDrive\Desktop\api3\api3\bin\Debug\net6.0\System.Text.Encodings
 C:\Users\rayfe\OneDrive\Desktop\api3\api3\bin\Debug\net6.0\System.Text.Json.dll
 C:\Users\rayfe\OneDrive\Desktop\api3\api3\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\rayfe\OneDrive\Desktop\api3\api3\bin\Debug\net6.0\CsvHelper.dll
+C:\Users\rayfe\OneDrive\Desktop\api3\api3\bin\Debug\net6.0\Newtonsoft.Json.dll

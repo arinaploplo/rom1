@@ -13,5 +13,7 @@ namespace api3.Interface // nombre de la interfaz
         Store GetStore(int id);
         bool DeleteStore(Store Store);
         int GetNextStoreId();
+
+        int GetStoreIdByName(string storeName);
     }
 }

@@ -28,6 +28,16 @@ namespace api3.Repository
             return saved > 0 ? true : false;
 
         }
+        public int GetStoreIdByName(string storeName)
+        {
+            var store = _context.Stores.FirstOrDefault(s => s.Name == storeName);
+            if (store != null)
+            {
+                return store.IdStore;
+            }
+            // Si no se encuentra la tienda, puedes manejarlo de la manera que desees, por ejemplo, devolver -1.
+            return -1;
+        }
 
         public bool StoreExist(int IdStore)
         {
@@ -53,7 +63,7 @@ namespace api3.Repository
         }
         public int GetNextStoreId()
         {
-            var lastStore = _context.Inventories
+            var lastStore = _context.Stores
                 .OrderByDescending(e => e.IdStore)
                 .FirstOrDefault();
 
