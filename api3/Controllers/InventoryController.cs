@@ -176,7 +176,6 @@ namespace api3.Controllers
 
 
 
-
                     foreach (var record in records)
                     {
                         StoreDto StoreDTO = new StoreDto(); // Crear una nueva instancia
@@ -184,36 +183,59 @@ namespace api3.Controllers
                         InventoryDto InventoryDTO = new InventoryDto(); // Crear una nueva instancia
 
                         // Agregar el store
-                        StoreDTO.IdStore = _RepositoryStore.GetNextStoreId();
-                        StoreDTO.Name = record.Store;
-                        if (_RepositoryStore.StoreExist(StoreDTO.IdStore))
-                        {
-                            return StatusCode(666, "Store ya existe");
-                        }
+                        int storeId = _RepositoryStore.GetStoreIdByName(record.Store);
+                        
+                        if (storeId == -1) {
+                            StoreDTO.IdStore = 0;
+                            StoreDTO.IdStore = _RepositoryStore.GetNextStoreId();
 
-                        var Store = _mapper.Map<Store>(StoreDTO);
+                            if (_RepositoryStore.StoreExist(StoreDTO.IdStore))
+                            {
+                                return StatusCode(666, "Store ya existe");
+                            }
 
-                        if (!_RepositoryStore.CreateStore(Store))
-                        {
-                            ModelState.AddModelError("", "Something went wrong while saving");
-                            return StatusCode(500, ModelState);
-                        }
+                            StoreDTO.Name = record.Store;
+
+                            var Store = _mapper.Map<Store>(StoreDTO);
+
+                            if (!_RepositoryStore.CreateStore(Store))
+                            {
+                                ModelState.AddModelError("", "Something went wrong while saving");
+                                return StatusCode(500, ModelState);
+                            }
+                        } else { StoreDTO.IdStore = storeId; }
+                        
+
+                      
 
                         //Agregar el empleado
-                        EmployeeDTO.IdEmployee = _RepositoryEmployee.GetNextEmployeeId();
-                        EmployeeDTO.Name = record.ListedBy;
-                        if (_RepositoryEmployee.EmployeeExist(EmployeeDTO.IdEmployee))
-                        {
-                            return StatusCode(666, "Employee ya existe");
-                        }
+                        int EmployeeId = _RepositoryEmployee.GetEmployeeIdByName(record.ListedBy);
 
-                        var Employee = _mapper.Map<Employee>(EmployeeDTO);
-
-                        if (!_RepositoryEmployee.CreateEmployee(Employee))
+                        if (EmployeeId == -1)
                         {
-                            ModelState.AddModelError("", "Something went wrong while saving");
-                            return StatusCode(500, ModelState);
+                            EmployeeDTO.IdEmployee = 0;
+                            EmployeeDTO.IdEmployee = _RepositoryEmployee.GetNextEmployeeId();
+
+                            if (_RepositoryEmployee.EmployeeExist(EmployeeDTO.IdEmployee))
+                            {
+                                return StatusCode(666, "Employee ya existe");
+                            }
+
+                            EmployeeDTO.Name = record.ListedBy;
+
+                            var Employee = _mapper.Map<Employee>(EmployeeDTO);
+
+                            if (!_RepositoryEmployee.CreateEmployee(Employee))
+                            {
+                                ModelState.AddModelError("", "Something went wrong while saving");
+                                return StatusCode(500, ModelState);
+                            }
                         }
+                        else { EmployeeDTO.IdEmployee = EmployeeId; }
+                        
+                       
+                        
+
 
                         InventoryDTO.IdInventory = _RepositoryInventory.GetNextInventoryId();
                         InventoryDTO.IdEmployee = EmployeeDTO.IdEmployee;

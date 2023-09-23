@@ -13,5 +13,7 @@ namespace api3.Interface
         Employee GetEmployee(int id);
         bool DeleteEmployee(Employee Employee);
         int GetNextEmployeeId();
+
+        int GetEmployeeIdByName(string EmployeeName);
     }
 }

@@ -72,5 +72,15 @@ namespace api3.Repository
                 return 1;
             }
         }
+        public int GetEmployeeIdByName(string EmployeeName)
+        {
+            var Employee = _context.Employees.FirstOrDefault(s => s.Name == EmployeeName);
+            if (Employee != null)
+            {
+                return Employee.IdEmployee;
+            }
+            // Si no se encuentra la tienda, puedes manejarlo de la manera que desees, por ejemplo, devolver -1.
+            return -1;
+        }
     }
 }
