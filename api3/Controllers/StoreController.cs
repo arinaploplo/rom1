@@ -20,7 +20,7 @@ namespace api3.Controllers
             _RepositoryStore = RepositoryStore;
             _mapper = mapper;
         }
-        [HttpGet]
+        [HttpGet("/store")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Store>))]
         public IActionResult GetStore()
         {

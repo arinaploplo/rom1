@@ -30,7 +30,7 @@ public partial class InventoryDto
 
 public partial class InventoryUpdateDto
 {
-    [JsonProperty("Listed By")]
+    [JsonProperty("Listed By")] // No se quiere poner el espacio
     public string ListedBy { get; set; }
 
     public int Quantity { get; set; }

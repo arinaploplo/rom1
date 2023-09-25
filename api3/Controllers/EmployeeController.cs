@@ -19,7 +19,7 @@ namespace api3.Controllers
             _RepositoryEmployee = RepositoryEmployee;
             _mapper = mapper;
         }
-        [HttpGet]
+        [HttpGet("/employee")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Employee>))]
         public IActionResult GetEmployee()
         {
